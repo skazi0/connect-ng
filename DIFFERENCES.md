@@ -26,3 +26,10 @@
   This is a bug and it's already fixed in the Go version.
 - With --debug the Go version sends all debug output to stderr. The Ruby
   version sends http debug to stderr, and other debug to stdout.
+- In zypper-migration plugin, bool flag arguments matching default value are
+  ignored. This changes behavior for cases where both positive and negative
+  flag is passed, e.g.: `zypper migration --verbose --no-verbose` disables
+  verbose in original Ruby version while Go version will enable verbose output.
+  For single flags the behavior is the same, i.e. `zypper migration --verbose`
+  enabled verbose output while `zypper migration --no-verbose` disables verbose
+  output (which is the default).
