@@ -33,3 +33,6 @@
   For single flags the behavior is the same, i.e. `zypper migration --verbose`
   enabled verbose output while `zypper migration --no-verbose` disables verbose
   output (which is the default).
+- In zypper-migration plugin, `--download <mode>` flag doesn't validate `<mode>`.
+- In zypper-migration plugin, if both `--allow-vendor-change` and
+  `--no-allow-vendor-change` flags are used, the latter has higher priority.
