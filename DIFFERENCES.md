@@ -36,3 +36,5 @@
 - In zypper-migration plugin, `--download <mode>` flag doesn't validate `<mode>`.
 - In zypper-migration plugin, if both `--allow-vendor-change` and
   `--no-allow-vendor-change` flags are used, the latter has higher priority.
+- Additional `--debug` flag was added to zypper-migration plugin to enable
+  `SUSEConnect` debug info.
