@@ -146,6 +146,7 @@ func migrationMain() {
 	// end
 
 	if selfUpdate {
+		echo := connect.SetSystemEcho(true)
 		//   # Update stack can be outside of the to be updated system
 		//   cmd = "zypper " +
 		//         (options[:non_interactive] ? "--non-interactive " : "") +
@@ -179,14 +180,17 @@ func migrationMain() {
 		//     end
 		//     exit 1
 		//   end
+		connect.SetSystemEcho(echo)
 	}
 	QuietOut.Print("\n")
 
 	// This is only necessary, if we run with --root option
+	echo := connect.SetSystemEcho(true)
 	if err := connect.RefreshRepos("", false, quiet, verbose, nonInteractive); err != nil {
 		fmt.Println("repository refresh failed, exiting")
 		os.Exit(1)
 	}
+	connect.SetSystemEcho(echo)
 
 	systemProducts, err := checkSystemProducts(true)
 	if err != nil {
@@ -561,6 +565,7 @@ func applyMigration(migration connect.MigrationPath, quiet, verbose, nonInteract
 		return fsInconsistent, err
 	}
 
+	echo := connect.SetSystemEcho(true)
 	if err := connect.RefreshRepos(baseProductVersion, true, false, false, false); err != nil {
 		return fsInconsistent, fmt.Errorf("Refresh of repositories failed: %v", err)
 	}
@@ -569,6 +574,7 @@ func applyMigration(migration connect.MigrationPath, quiet, verbose, nonInteract
 	}
 
 	err = connect.DistUpgrade(baseProductVersion, quiet, verbose, nonInteractive, dupArgs)
+	connect.SetSystemEcho(echo)
 	// TODO: export connect.zypperErrCommit (8)?
 	if err != nil && err.(connect.ZypperError).ExitCode == 8 {
 		fsInconsistent = true
