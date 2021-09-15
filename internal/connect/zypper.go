@@ -1,6 +1,7 @@
 package connect
 
 import (
+	_ "embed" //golint
 	"encoding/xml"
 	"strings"
 )
@@ -30,6 +31,11 @@ const (
 	zypperInfoCapNotFound     = 104 // install or remove command encountered arguments matching no of the available package names or capabilities
 	zypperInfoOnSignal        = 105 // Returned upon exiting after receiving a SIGINT or SIGTERM
 	zypperInfoReposSkipped    = 106 // Some repository had to be disabled temporarily because it failed to refresh
+)
+
+var (
+	//go:embed zypper-restore.tmpl
+	restoreTemplate string
 )
 
 func zypperRun(args []string, validExitCodes []int) ([]byte, error) {
