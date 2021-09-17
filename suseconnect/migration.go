@@ -57,7 +57,6 @@ func migrationMain() {
 	var (
 		// dummy flag to keep default but accept cli arg
 		dummy          bool
-		debug          bool
 		verbose        bool
 		quiet          bool
 		nonInteractive bool
@@ -76,7 +75,6 @@ func migrationMain() {
 	flag.Usage = func() {
 		fmt.Print(migrationUsageText)
 	}
-	flag.BoolVar(&debug, "debug", false, "")
 	flag.BoolVar(&dummy, "no-verbose", false, "")
 	flag.BoolVar(&verbose, "verbose", false, "")
 	flag.BoolVar(&verbose, "v", false, "")
@@ -120,12 +118,18 @@ func migrationMain() {
 	// negations/negatives below
 	selfUpdate := !noSelfUpdate
 
+	logFile, err := os.OpenFile("/var/log/zypper-migrate.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0600)
+	if err != nil {
+		fmt.Printf("Unable to open log file: %v", err)
+	} else {
+		Debug.SetOutput(logFile)
+		Debug.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
+		defer logFile.Close()
+	}
+	Debug.Printf("Started: %s\n", os.Args)
+
 	if verbose {
 		VerboseOut.SetOutput(os.Stdout)
-	}
-
-	if debug {
-		connect.EnableDebug()
 	}
 
 	if !quiet {
